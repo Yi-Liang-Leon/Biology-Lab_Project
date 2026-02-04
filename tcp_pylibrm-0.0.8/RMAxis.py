@@ -188,11 +188,19 @@ class Axis_V6(object):
 
     def read_coil(self, address):
         r = self._client.read_coils(address, unit=self._slave_id)
-        return r.bits[0]
+        if hasattr(r, 'bits'):
+            return r.bits[0]
+        else:
+            print(f"Modbus communication error: {r}")
+            return False
     
     def read_discrete_inputs(self, address):
         r = self._client.read_discrete_inputs(address,1, unit=self._slave_id)
-        return r.bits[0]
+        if hasattr(r, 'bits'):
+            return r.bits[0]
+        else:
+            print(f"Modbus communication error: {r}")
+            return False
     
     def read_discrete_inputs_with_retry(self, address, max_retries=1):
         for _ in range(max_retries):
@@ -663,7 +671,7 @@ class Axis_V6(object):
     def is_ready(self):
         servo_on_off = self.read_coil(const.VIRTUAL_IO_SERVO_ON_OFF)
         ret = self.error_code()
-        if (servo_on_off and ret == 0):
+        if (servo_on_off and len(ret) == 0):
             return True
         else:
             return False

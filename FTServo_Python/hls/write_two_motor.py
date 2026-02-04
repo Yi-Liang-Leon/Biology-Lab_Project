@@ -38,23 +38,23 @@ else:
     print("Failed to change the baudrate")  # 设置失败提示
     quit()  # 退出程序
 
-# 舵机(ID1)
-scs_comm_result, scs_error = packetHandler.WritePosEx(1, 2048, 80, 80, 800)  # 发送位置命令，参数含义依次为ID, 目标位置, 速度, 加速度, 力矩
-if scs_comm_result != COMM_SUCCESS:
-    print("%s" % packetHandler.getTxRxResult(scs_comm_result))  # 通信失败错误信息
-elif scs_error != 0:
-    print("%s" % packetHandler.getRxPacketError(scs_error))  # 协议错误信息
+toggle=1
 
+# 舵机(ID1)
+pos1=3350 if toggle else 2048
+scs_comm_result, scs_error = packetHandler.WritePosEx(1, pos1, 80, 80, 800)  # 发送位置命令，参数含义依次为ID, 目标位置, 速度, 加速度, 力矩
+print("%s" % packetHandler.getTxRxResult(scs_comm_result))  # 通信失败错误信息
+if scs_error != 0:
+    print("%s" % packetHandler.getRxPacketError(scs_error))  # 协议错误信息
 # 等待时间，确保舵机运动完成
 time.sleep(1) 
 
 # 舵机(ID2)
-scs_comm_result, scs_error = packetHandler.WritePosEx(2, 2048, 80, 80, 800)  # 发送位置命令，参数含义依次为ID, 目标位置, 速度, 加速度, 力矩
-if scs_comm_result != COMM_SUCCESS:
-    print("%s" % packetHandler.getTxRxResult(scs_comm_result))
-elif scs_error != 0:
+pos2=750 if toggle else 2048
+scs_comm_result, scs_error = packetHandler.WritePosEx(2, pos2, 80, 80, 800)  # 发送位置命令，参数含义依次为ID, 目标位置, 速度, 加速度, 力矩
+print("%s" % packetHandler.getTxRxResult(scs_comm_result))
+if scs_error != 0:
     print("%s" % packetHandler.getRxPacketError(scs_error))
-
 # 等待时间，确保运动完成
 time.sleep(1)
 
